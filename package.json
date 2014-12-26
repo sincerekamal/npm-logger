@@ -1,0 +1,23 @@
+{
+  "name": "npm-logger",
+  "version": "0.1.0",
+  "description": "",
+  "main": "logger.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vijayanandELF/npm-logger.git"
+  },
+  "keywords": [
+    "logger",
+    "log"
+  ],
+  "author": "Vijayanand Santhiyagu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vijayanandELF/npm-logger/issues"
+  },
+  "homepage": "https://github.com/vijayanandELF/npm-loggerr",
+  "dependencies": {
+    "colors": "^1.0.3"
+  }
+}
