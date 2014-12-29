@@ -105,10 +105,12 @@ logger.log = function () {
 				_style = "reset";
 				break;
 			case 'debug':
+				console.debug = (!console.debug) ? console.log : console.debug;
 				_color = "cyan";
 				_style = "reset";
 				break;
 			case 'info':
+				console.info = (!console.info) ? console.log : console.info;
 				_color = "magenta";
 				_style = "reset";
 				break;
