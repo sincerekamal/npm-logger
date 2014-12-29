@@ -6,14 +6,7 @@
 
 /** For best practices, we will be using this service, instead of console.log
   * @example logger.log("loglevel", "logcategory", logmsg, [logmsgs][..])
-  *  @param {loglevels} - all, none, log, debug, info, warning, error
-  *   logLevels have this precedence
-  *  		log - error, warning, debug, info, log
-			debug - error, warning, info, log
-			info - error, warning, info
-			warning - error, warning
-			error - error
-  *
+  *  @param {logleve} - all, none, log, debug, info, warn, error
   *  @param {logTypes} - It is set in the config object, for example: mongo, sockets, etc.,
   *  @param {logmsg} - Message to be printed, string, object, array, int
   */
@@ -39,7 +32,7 @@ var logger = {};
 var _color = "cyan";
 var _style = "underline";
 
-logger._levels = ["all", "log", "debug", "info", "warning", "error", "none"];
+logger._levels = ["all", "log", "debug", "info", "warn", "error", "none"];
 logger.logTypes = {all: true, none: false};
 
 var getTime = function () {
@@ -102,88 +95,38 @@ logger.enable = function (enable) {
 };
 logger.log = function () {
 	if (_shouldLog(logger, arguments[0], arguments[1])) {
-		if (arguments[0] == "error") {
-			_color = "red";
-			_style = "bold";
-			logger._error.apply(logger, arguments);
+		switch (arguments[0]) {
+			case 'error':
+				_color = "red";
+				_style = "bold";
+				break;
+			case 'warn':
+				_color = "yellow";
+				_style = "reset";
+				break;
+			case 'debug':
+				_color = "cyan";
+				_style = "reset";
+				break;
+			case 'info':
+				_color = "magenta";
+				_style = "reset";
+				break;
+			case 'log':
+				_color = "grey";
+				_style = "bold";
+				break;
+			default:
+				// If the level doesn't match with any of the above level
+				// Change it to log level
+				_color = "grey";
+				_style = "bold";
+				arguments[0] = 'log';
+
 		}
-		else if (arguments[0] == "warning") {
-			_color = "yellow";
-			_style = "reset";
-			logger._warn.apply(logger, arguments);
-		}
-		else if (arguments[0] == "debug") {
-			_color = "cyan";
-			_style = "reset";
-			logger._debug.apply(logger, arguments);
-		}
-		else if (arguments[0] == "info") {
-			_color = "magenta";
-			_style = "reset";
-			logger._info.apply(logger, arguments);
-		}
-		else if (arguments[0] == "log") {
-			_color = "grey";
-			_style = "bold";
-			logger._log.apply(logger, arguments);
-		}
+		console[arguments[0]].apply(console, getFormattedParams(arguments));
 	}
 }
-
-logger._jsonStringify = function(obj) {
-		var jsonString = "";
-		try {
-			jsonString = JSON.stringify(arguments);
-		}
-		catch(err) {
-			jsonString = "Failed to stringify. Debuging in this browser is not recommended";
-		}
-		return jsonString;
-};
-
-logger._error = function () {
-	if (console.error['apply']) {
-		console.error.apply(console, getFormattedParams(arguments));
-	} else {
-		console.error(logger._jsonStringify(arguments));
-	}
-};
-
-logger._log = function () {
-	if (console.log['apply']) {
-		console.log.apply(console, getFormattedParams(arguments));
-	} else {
-		console.log(logger._jsonStringify(arguments));
-	}
-};
-
-logger._warn = function () {
-	if (console.warn['apply']) {
-		console.warn.apply(console, getFormattedParams(arguments));
-	} else {
-		console.warn(logger._jsonStringify(arguments));
-	}
-};
-
-logger._info = function () {
-	if (!console.info)
-		console.info = console.log;
-	if (console.info['apply']) {
-		console.info.apply(console, getFormattedParams(arguments));
-	} else {
-		console.info(logger._jsonStringify(arguments));
-	}
-};
-
-logger._debug = function () {
-	if (!console.debug)
-		console.debug = console.log;
-	if (console.debug['apply']) {
-		console.debug.apply(console, getFormattedParams(arguments));
-	} else {
-		console.debug(logger._jsonStringify(arguments));
-	}
-};
 
 
 logger.enable(logConfig.enableLog); // Don't show logs if configuration prohibits
